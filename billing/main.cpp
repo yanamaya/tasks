@@ -1,32 +1,30 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <string>
-#include <ctime>
 
-struct CallInfo {
-    std::string number;
-    uint durationSeconds;
-    time_t date; // month number
-};
-struct MonthCosts{
+#include "include/CallInfo.hpp"
+
+struct Costs{
     int month; // month's number
     double constFee; //payment for each connection
     int SecondsLimit; //30 seconds limit for Subscriber per month
     double payment;
-    //TODO
-    int minsOverLimit (int callDuration);//TODO
-    void calculateCall(const CallInfo&call);//TODO
-    void report();//TODO
 };
+    //TODO
+ //   int minsOverLimit (int callDuration);//TODO
+ //   void calculateCall(const CallInfo&call);//TODO
+ //   void report();//TODO
+
 using CallData = std::vector<CallInfo>;
 using SubscriberCallList = std::map <std::string, CallData>;
 
 void fillmap(SubscriberCallList&maptofill);
 void showmapinfo (const SubscriberCallList & mpinfo);
 time_t setTime (int year, int mon, int day, int hour, int min, int sec);
+
+void processCallsList(SubscriberCallList&allCalls, std::string &num, time_t start, time_t end);
 //TODO:
-int checkmonth(const CallInfo & call);
+//int checkmonth(const CallInfo & call);
 
 
 
@@ -34,15 +32,19 @@ int main() { //main с аргументами, чтобы получить но�
     SubscriberCallList mp;
     fillmap(mp);
     std::string number="0669876543"; // не знаю как его считать при запуске из командной строки (вводится номер телефона и файл.exe)
+    time_t start_period=setTime(2020, 8, 28, 10, 22, 33);
+    time_t end_period=setTime(020, 8, 31, 10, 22, 33);
+
+
 
     //check if number found
     CallData & callslist = mp.find(number)->second;
 
     //IF FOUND:
     int size = callslist.size();
-    std::vector <MonthCosts> bills;//bills for each month
+    std::vector <Costs> bills;//bills for each month
     //process each call
-    int month=0;
+ /*   int month=0;
     int n=0; // number of bills - months with payments
     for (int i=0; i<size; ++i)
     {
@@ -75,8 +77,8 @@ int main() { //main с аргументами, чтобы получить но�
     for (auto it=bills.begin(); it<bills.end(); ++it)
     {
         it->report();
-    }
-    //showmapinfo(mp);
+    }*/
+    showmapinfo(mp);
     return 0;
 }
 time_t setTime (int year, int mon, int day, int hour, int min, int sec){
@@ -136,20 +138,49 @@ void showmapinfo(const SubscriberCallList & mpinfo){
     }
 }
 
+void processCallsList(SubscriberCallList&allCalls, std::string &num, time_t start, time_t end){
+    CallData & callslist = allCalls.find(num)->second;
+
+    int size = callslist.size();
+    std::vector <Costs> bills;
+    int quant=0; //quantity of bills
+    for (int i=0; i<size; ++i)
+    {
+        if (callslist[i].date>start && callslist[i].date<end)
+        {
+            bills.push_back(Costs{1, 0.00, 30, 0.00});
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 int checkmonth(const CallInfo & call){
     //get from vector element month number and return it as int
     return 8;
 }
-int MonthCosts::minsOverLimit (int callDuration){
+int minsOverLimit (int callDuration){
     //check the value monthLimit if it is no more than 30 minutes return 0 to pay
     // if more than 30 -> add the limit to 30 and return the rest for payment
     return true;
 }
-void MonthCosts::calculateCall(const CallInfo&call){
+void calculateCall(const CallInfo&call){
     this->constFee +=0.33;
     //check the net
     this->payment +=minsOverLimit(call.durationSeconds)*0.51; // or 0.95
 }
-void MonthCosts::report(){
-std::cout << " per month: " << this->payment << "UAH" << std::endl;
+void report(){
+std::cout << " per month: " << payment << "UAH" << std::endl;
 }
+*/
